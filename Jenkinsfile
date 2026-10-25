@@ -10,6 +10,10 @@ pipeline {
         )
     }
 
+    environment {
+        PYTHON_EXE = 'C:\\Users\\Nirmal priya\\AppData\\Local\\Programs\\Python\\Python312\\python.exe'
+    }
+
     stages {
         stage('Checkout Code') {
             steps {
@@ -26,9 +30,9 @@ pipeline {
         stage('Build') {
             steps {
                 bat '''
-                    python --version
-                    python -m pip install -r requirements.txt
-                    python -m py_compile app.py
+                    "%PYTHON_EXE%" --version
+                    "%PYTHON_EXE%" -m pip install -r requirements.txt
+                    "%PYTHON_EXE%" -m py_compile app.py
                 '''
             }
         }
