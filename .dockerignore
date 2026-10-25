@@ -1,0 +1,15 @@
+
+.venv/
+venv/
+__pycache__/
+*.pyc
+.git/
+.gitignore
+.vscode/
+data/
+*.db
+*.key
+.env
+.env.*
+Jenkinsfile
+README.md
