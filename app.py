@@ -18,14 +18,14 @@ app.secret_key = os.environ.get(
     "FLASK_SECRET_KEY", "development-only-change-this-key"
 )
 
-# Encryption key for local development
+# Generate encryption key for local development
 if not KEY_FILE.exists():
     KEY_FILE.write_bytes(Fernet.generate_key())
 
 cipher = Fernet(KEY_FILE.read_bytes())
 
 
-# Create database
+# Create database table
 def init_db():
     with sqlite3.connect(DATABASE) as conn:
         conn.execute("""
@@ -38,7 +38,7 @@ def init_db():
         """)
 
 
-# Home page - Version 2
+# Home page - View Credentials
 @app.route("/")
 def home():
     with sqlite3.connect(DATABASE) as conn:
@@ -56,7 +56,7 @@ def home():
     )
 
 
-# Add credentials - Version 1
+# Version 1 - Add Credentials
 @app.route("/add", methods=["POST"])
 def add_credentials():
     website = request.form.get("website", "").strip()
@@ -84,7 +84,26 @@ def add_credentials():
     return redirect(url_for("home"))
 
 
-# Start application
+# Version 3 - Delete Credentials
+@app.route("/delete/<int:credential_id>", methods=["POST"])
+def delete_credentials(credential_id):
+    with sqlite3.connect(DATABASE) as conn:
+        cursor = conn.execute(
+            "DELETE FROM credentials WHERE id = ?",
+            (credential_id,)
+        )
+
+        deleted = cursor.rowcount
+
+    if deleted:
+        flash("Credential deleted successfully!")
+    else:
+        flash("Credential not found.")
+
+    return redirect(url_for("home"))
+
+
+# Start Flask application
 if __name__ == "__main__":
     init_db()
     app.run(host="127.0.0.1", port=5000, debug=False)
