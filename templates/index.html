@@ -6,7 +6,7 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
-    <title>Password Manager - Version 1</title>
+    <title>Password Manager - Version 2</title>
 
     <style>
         * {
@@ -17,12 +17,12 @@
             font-family: Arial, sans-serif;
             background: #eef2f7;
             margin: 0;
-            padding: 30px 15px;
+            padding: 25px 15px;
         }
 
         .container {
-            max-width: 450px;
-            margin: 50px auto;
+            max-width: 850px;
+            margin: 30px auto;
             background: white;
             padding: 30px;
             border-radius: 12px;
@@ -34,10 +34,14 @@
             color: #1e3a8a;
         }
 
+        h2 {
+            margin-top: 30px;
+            color: #1e40af;
+        }
+
         .subtitle {
             text-align: center;
             color: #64748b;
-            margin-bottom: 25px;
         }
 
         label {
@@ -55,11 +59,6 @@
             font-size: 15px;
         }
 
-        input:focus {
-            outline: 2px solid #2563eb;
-            outline-offset: 1px;
-        }
-
         button {
             width: 100%;
             padding: 13px;
@@ -67,7 +66,7 @@
             color: white;
             border: none;
             border-radius: 6px;
-            margin-top: 25px;
+            margin-top: 20px;
             font-size: 16px;
             cursor: pointer;
         }
@@ -81,14 +80,45 @@
             color: #166534;
             padding: 12px;
             border-radius: 6px;
-            margin-bottom: 15px;
+            margin: 15px 0;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #e2e8f0;
+        }
+
+        th {
+            background: #1e40af;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        .empty {
+            text-align: center;
+            color: #64748b;
+            padding: 20px;
         }
 
         .footer {
             text-align: center;
-            margin-top: 25px;
-            font-size: 13px;
+            margin-top: 30px;
             color: #64748b;
+            font-size: 13px;
         }
     </style>
 </head>
@@ -100,10 +130,10 @@
         <h1>Password Manager</h1>
 
         <p class="subtitle">
-            Version 1 - Add Credentials
+            Version 2 - Add and View Credentials
         </p>
 
-        <!-- Display Flask messages -->
+        <!-- Flash messages -->
         {% with messages = get_flashed_messages() %}
             {% if messages %}
                 {% for message in messages %}
@@ -114,7 +144,9 @@
             {% endif %}
         {% endwith %}
 
-        <!-- Add Credentials Form -->
+        <!-- Add Credentials -->
+        <h2>Add Credentials</h2>
+
         <form action="{{ url_for('add_credentials') }}"
               method="POST">
 
@@ -153,8 +185,39 @@
 
         </form>
 
+        <!-- View Credentials -->
+        <h2>Saved Credentials</h2>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Website</th>
+                        <th>Username / Email</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for credential in credentials %}
+                    <tr>
+                        <td>{{ credential['id'] }}</td>
+                        <td>{{ credential['website'] }}</td>
+                        <td>{{ credential['username'] }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="3" class="empty">
+                            No credentials saved yet.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
         <p class="footer">
-            Password Manager v1 | 24MIS0552
+            Password Manager v2 | 24MIS0552
         </p>
 
     </div>
